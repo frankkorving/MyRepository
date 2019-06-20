@@ -1,0 +1,26 @@
+answer = getAttachmentReadAnswer();
+
+function getAttachmentReadAnswer() {
+
+    // if user has read permission to incidents or incident tasks
+    if (current.table_name == 'incident' || current.table_name == 'u_incident_task') {
+        var grTable = new GlideRecord(current.table_name);
+        grTable.get(current.table_sys_id);
+        if (grTable.canRead()) {
+            return true;
+        } else {
+
+            // if user has read permission to one of the child incident tasks
+            if (current.table_name == 'incident') {
+                var isAuthorized = false;
+                var grTableTask = new GlideRecord('u_incident_task');
+                grTableTask.addQuery('parent', current.table_sys_id);
+                grTableTask.query();
+                while(grTableTask.next() && !isAuthorized) {
+                    isAuthorized = grTableTask.canRead();
+                }
+                return isAuthorized;
+            }
+        }
+    }
+}
