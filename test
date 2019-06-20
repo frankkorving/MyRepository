@@ -16,7 +16,7 @@ function getAttachmentReadAnswer() {
                 var grTableTask = new GlideRecord('u_incident_task');
                 grTableTask.addQuery('parent', current.table_sys_id);
                 grTableTask.query();
-                while(grTableTask.next() && !isAuthorized) {
+                while (grTableTask.next() && !isAuthorized) {
                     isAuthorized = grTableTask.canRead();
                 }
                 return isAuthorized;
